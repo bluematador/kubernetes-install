@@ -1,0 +1,57 @@
+kind: ServiceAccount
+apiVersion: v1
+metadata:
+  name: bluematador-agent
+  namespace: default
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: bluematador-agent
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - services
+  - events
+  - endpoints
+  - pods
+  - nodes
+  - componentstatuses
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - "extensions"
+  resources:
+  - deployments
+  - daemonsets
+  verbs:
+  - get
+  - list
+- nonResourceURLs:
+  - "/version"
+  - "/healthz"
+  verbs:
+  - get
+- apiGroups:
+  - ""
+  resources:
+  - nodes/metrics
+  - nodes/spec
+  - nodes/proxy
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: bluematador-agent
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: bluematador-agent
+subjects:
+- kind: ServiceAccount
+  name: bluematador-agent
+  namespace: default

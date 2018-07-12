@@ -1,0 +1,61 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: bluematador-agent
+spec:
+  template:
+    metadata:
+      labels:
+        name: bluematador-agent
+    spec:
+      tolerations:
+       - key: node-role.kubernetes.io/master
+         effect: NoSchedule
+      serviceAccountName: bluematador-agent
+      containers:
+      - name: bluematador-agent
+        image: bluematador/agent:latest
+        imagePullPolicy: Always
+        env:
+          - name: BLUEMATADOR_ACCOUNT
+            value: "<your account id>" # must be filled in
+          - name: BLUEMATADOR_KEY
+            value: "<your api key>"    # must be filled in
+          - name: BLUEMATADOR_KUBERNETES
+            value: ""                  # must be nonempty
+          - name: BLUEMATADOR_DOCKER
+            value: "true"
+          - name: BLUEMATADOR_POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: BLUEMATADOR_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "200m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+        volumeMounts:
+          - name: dockersocket
+            mountPath: /var/run/docker.sock
+          - name: procdir
+            mountPath: /host/proc
+            readOnly: true
+          - name: cgroups
+            mountPath: /host/sys/fs/cgroup
+            readOnly: true
+      volumes:
+        - hostPath:
+            path: /var/run/docker.sock
+          name: dockersocket
+        - hostPath:
+            path: /proc
+          name: procdir
+        - hostPath:
+            path: /sys/fs/cgroup
+          name: cgroups
