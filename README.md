@@ -1,4 +1,4 @@
-# kubernetes
+# kubernetes-install
 
 Installs/Configures the Blue Matador Agent on Kubernetes.
 
