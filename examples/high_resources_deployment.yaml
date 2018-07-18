@@ -1,0 +1,20 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: high-resources
+spec:
+  template:
+    metadata:
+      labels:
+        name: high-resources
+    spec:
+      containers:
+      - name: high-resources
+        image: k8s.gcr.io/echoserver:1.8
+        resources:
+          requests:
+            memory: "20000Mi"
+            cpu: "10000m"
+          limits:
+            memory: "40000Mi"
+            cpu: "20000m"
