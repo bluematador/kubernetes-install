@@ -9,6 +9,8 @@ spec:
         name: bluematador-agent
     spec:
       tolerations:
+       - effect: NoExecute
+         operator: Exists
        - key: node-role.kubernetes.io/master
          effect: NoSchedule
       serviceAccountName: bluematador-agent
@@ -35,8 +37,8 @@ spec:
                 fieldPath: metadata.namespace
         resources:
           requests:
-            memory: "128Mi"
-            cpu: "200m"
+            memory: "64Mi"
+            cpu: "50m"
           limits:
             memory: "128Mi"
             cpu: "200m"
