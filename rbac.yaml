@@ -18,16 +18,29 @@ rules:
   - pods
   - nodes
   - componentstatuses
+  - persistentvolumes
   verbs:
   - get
+  - watch
   - list
 - apiGroups:
   - "extensions"
+  - "apps"
   resources:
   - deployments
   - daemonsets
   verbs:
   - get
+  - watch
+  - list
+- apiGroups:
+  - "extensions"
+  - "batch"
+  resources:
+  - jobs
+  verbs:
+  - get
+  - watch
   - list
 - nonResourceURLs:
   - "/version"
