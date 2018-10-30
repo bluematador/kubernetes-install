@@ -13,8 +13,8 @@ spec:
         image: k8s.gcr.io/echoserver:1.8
         resources:
           requests:
-            memory: "20000Mi"
-            cpu: "10000m"
+            memory: "200000Mi"
+            cpu: "100000m"
           limits:
-            memory: "40000Mi"
-            cpu: "20000m"
+            memory: "400000Mi"
+            cpu: "200000m"

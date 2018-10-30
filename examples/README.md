@@ -23,12 +23,6 @@ High Resource Requirements
 kubectl apply -f https://raw.githubusercontent.com/bluematador/kubernetes-install/master/examples/high_resources_deployment.yaml
 ```
 
-Service with Bad Endpoints
-```
-kubectl apply -f https://raw.githubusercontent.com/bluematador/kubernetes-install/master/examples/echo_server_deployment.yaml
-kubectl apply -f https://raw.githubusercontent.com/bluematador/kubernetes-install/master/examples/echo_server_service.yaml
-```
-
 ## Additional Information
 
 For more information, visit the [Blue Matador Website](https://www.bluematador.com)
