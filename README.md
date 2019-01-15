@@ -4,7 +4,7 @@ Installs/Configures the Blue Matador Agent on Kubernetes.
 
 ## Requirements
 
- * kubernetes >= 1.8.0
+ * kubernetes >= 1.10
 
 ## Usage
 
