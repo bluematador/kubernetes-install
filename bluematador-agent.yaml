@@ -3,6 +3,8 @@ kind: DaemonSet
 metadata:
   name: bluematador-agent
 spec:
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
