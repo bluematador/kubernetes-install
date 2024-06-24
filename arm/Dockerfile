@@ -12,6 +12,6 @@ RUN apk add --update ca-certificates
 RUN mkdir /var/lib/bluematador-agent
 ADD arm/config.ini /etc/bluematador-agent/config.ini
 
-RUN wget -O bluematador-agent "https://s3://bluematador-staging-flint-modules/quartz/bluematador-agent-3.1.0_amd64.tar.gz" && tar -zxvf bluematador-agent && rm bluematador-agent
+RUN wget -O bluematador-agent "https://s3.amazonaws.com/bluematador-staging-flint-modules/quartz/bluematador-agent-3.1.0_amd64.tar.gz" && tar -zxvf bluematador-agent && rm bluematador-agent
 
 CMD ["sh", "-c", "/usr/sbin/bluematador-agent -log stdout -verbose ${BLUEMATADOR_VERBOSE} -config /etc/bluematador-agent/config.ini -datadir /var/lib/bluematador-agent"]
