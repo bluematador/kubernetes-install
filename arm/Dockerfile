@@ -19,7 +19,7 @@ WORKDIR "/app/quartz"
 RUN mkdir -p /var/lib/bluematador-agent
 
 # Download and extract the Bluematador agent
-RUN wget -O bluematador-agent "https://bluematador-staging-flint-modules.s3.amazonaws.com/quartz/bluematador-agent-${version}_arm64.tar.gz" && \
+RUN wget -O bluematador-agent "https://bluematador-flint-modules.s3.amazonaws.com/quartz/bluematador-agent-${version}_arm64.tar.gz" && \
     tar -zxvf bluematador-agent && \
     rm bluematador-agent
 
@@ -31,5 +31,5 @@ RUN sudo chown -R bmuser:bmgroup /app/quartz
 # Switch to the non-root user
 USER bmuser
 
-# TODO after testing we have to change the verbose level
-CMD ["sh", "-c", "/app/quartz/usr/sbin/bluematador-agent -log stdout -verbose 6 -config /etc/bluematador-agent/config.ini -datadir /var/lib/bluematador-agent"]
+# TODO after testing we have to change the verbosity level
+CMD ["sh", "-c", "/app/quartz/usr/sbin/bluematador-agent -log stdout -verbose 2 -config /etc/bluematador-agent/config.ini -datadir /var/lib/bluematador-agent"]
