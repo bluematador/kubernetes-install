@@ -86,6 +86,26 @@ kubectl rollout restart daemonset/bluematador-agent
 - Verify API key is correct in the DaemonSet configuration
 - Review pod logs for connection errors
 
+### Enabling verbose logging
+
+For detailed debugging information, increase the log verbosity by setting the `BLUEMATADOR_VERBOSE` environment variable in your `bluematador-agent.yaml`:
+
+```yaml
+env:
+  - name: BLUEMATADOR_VERBOSE
+    value: "5"
+```
+
+**Log levels:**
+- `2` - Default (standard operational logs)
+- `5` - Verbose (detailed debugging information)
+- `6` - Very verbose (maximum detail for troubleshooting)
+
+After modifying the YAML, apply the changes:
+```bash
+kubectl apply -f bluematador-agent.yaml
+```
+
 ## Uninstalling
 
 To remove the Blue Matador agent from your cluster:
