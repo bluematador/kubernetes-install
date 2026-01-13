@@ -1,17 +1,32 @@
-FROM alpine:3.8
-
-ARG version=2.0.3
+FROM alpine:3.23.2
+ARG version=3.3.1
 ENV BLUEMATADOR_VERBOSE=2
-
-# Symlink the compatible muslc dependencies
-RUN mkdir /lib64 && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
-
-# Certificates for SSL
-RUN apk add --update ca-certificates
-
-RUN mkdir /var/lib/bluematador-agent
+RUN arch=$(uname -m) && \
+    if [ "$arch" = "x86_64" ]; then echo "platform=amd64" >> /etc/environment; \
+    elif [ "$arch" = "aarch64" ]; then echo "platform=arm64" >> /etc/environment; \
+    else echo "Unsupported architecture: $arch" && exit 1; fi
+# Install dependencies and tools
+RUN apk update && apk upgrade
+RUN apk add --no-cache wget tar sudo
+# Create a non-root user and group
+RUN addgroup -g 1000 bmgroup && adduser -u 1000 -G bmgroup -S bmuser
+# Creates an empty config.ini file
 ADD config.ini /etc/bluematador-agent/config.ini
+VOLUME "/app"
+WORKDIR "/app/quartz"
+# Creates Datadir directory
+RUN mkdir -p /var/lib/bluematador-agent
+# Download and extract the Bluematador agent
+RUN source /etc/environment && \
+    echo "https://bluematador-flint-modules.s3.amazonaws.com/quartz/bluematador-agent-${version}_${platform}.tar.gz" && \
+    wget -O bluematador-agent "https://bluematador-flint-modules.s3.amazonaws.com/quartz/bluematador-agent-${version}_${platform}.tar.gz" && \
+    tar -zxvf bluematador-agent && \
+    rm bluematador-agent
+# Adjust permissions
+RUN sudo chown -R bmuser:bmgroup /var/lib/bluematador-agent
+RUN sudo chown -R bmuser:bmgroup /etc/bluematador-agent
+RUN sudo chown -R bmuser:bmgroup /app/quartz
+# Switch to the non-root user
+USER bmuser
 
-RUN wget -O bluematador-agent "https://s3.amazonaws.com/bluematador-flint-modules/quartz/bluematador-agent-${version}_amd64.tar.gz" && tar -zxvf bluematador-agent && rm bluematador-agent
-
-CMD ["sh", "-c", "/usr/sbin/bluematador-agent -log stdout -verbose ${BLUEMATADOR_VERBOSE} -config /etc/bluematador-agent/config.ini -datadir /var/lib/bluematador-agent"]
+CMD ["sh", "-c", "/app/quartz/usr/sbin/bluematador-agent -log stdout -verbose ${BLUEMATADOR_VERBOSE} -config /etc/bluematador-agent/config.ini -datadir /var/lib/bluematador-agent"]
